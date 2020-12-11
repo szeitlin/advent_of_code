@@ -95,6 +95,6 @@ class TestMyCode(unittest.TestCase):
         lines = example.split('\n')
         trees = count_trees(lines)
         assert trees == 7
-        
+
 if __name__ == '__main__':
     unittest.main()
