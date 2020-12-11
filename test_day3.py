@@ -1,17 +1,6 @@
 import unittest
-from day3 import prep_input
+from day3 import count_trees
 
-class TestPrepInput(unittest.TestCase):
-
-    def test_mock_input(self):
-        """
-        I totally did not understand what they wanted here until I looked at the sample input
-        and saw my code fail. 
-        """
-        mock = ["a", "b", "c", "d", "e", "f", "g"]
-        wider = prep_input(mock)
-        print(wider)
-        assert wider == ["aa", "bb", "cc", "dd", "ee", "ff", "gg"]
 
 class TestExample(unittest.TestCase):
 
@@ -89,5 +78,23 @@ class TestExact(unittest.TestCase):
                 pass
         assert lines == expected_lines
 
+class TestMyCode(unittest.TestCase):
+
+    def test_count_trees(self):
+        example =   "..##.........##.........##.........##.........##.........##.......\n" \
+                    "#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..\n" \
+                    ".#....#..#..#....#..#..#....#..#..#....#..#..#....#..#..#....#..#.\n" \
+                    "..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#\n" \
+                    ".#...##..#..#...##..#..#...##..#..#...##..#..#...##..#..#...##..#.\n" \
+                    "..#.##.......#.##.......#.##.......#.##.......#.##.......#.##.....\n" \
+                    ".#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#\n" \
+                    ".#........#.#........#.#........#.#........#.#........#.#........#\n" \
+                    "#.##...#...#.##...#...#.##...#...#.##...#...#.##...#...#.##...#...\n" \
+                    "#...##....##...##....##...##....##...##....##...##....##...##....#\n" \
+                    ".#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#"
+        lines = example.split('\n')
+        trees = count_trees(lines)
+        assert trees == 7
+        
 if __name__ == '__main__':
     unittest.main()
