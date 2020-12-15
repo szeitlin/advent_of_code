@@ -7,35 +7,55 @@ def read_batch_files(inputdoc:str) -> list:
     """
     return [x.strip() for x in inputdoc.split('\n\n')]
 
-def validate_passport_data(document:str) -> int:
-    """
-    Convert unstructured text to dictionaries and 
-    
-    
-    :return: 
-    """
-    groups = find_fields(document)
-    if check_fields_present(groups) == 1:
-        #check if they're actually valid
-        #byr: (v >= 1920) and (v <= 2002)
-        #iyr: (v >= 2010) and (v <= 2020)
-        #eyr: (v >= 2020) and (v <= 2030)
-        #hgt: if cm (v >= 150) and (v <= 193)
-              #if in (v >= 59) and (v <= 76)
-        #hcl: v.startswith('#') and [0-9]{6} or [a-f]{6}
-        #ecl: v in 'amb blu brn gry grn hzl oth'
-        #pid: len(v) == 9
+# def validate_passport_data(document:str) -> int:
+#     """
+#     Check if field values are consistent with stated requirements
+#     """
+#     groups = find_fields(document)
+#     if check_fields_present(groups) == 1:
+#         #check if they're actually valid
+#         valid = 0
+#         for group in groups:
+#             m = re.compile('(:\s?#|\w*\b)')
+#             #todo: find the value associated with the key
+#             if group == 'byr:':
+#                 if (v >= 1920) and (v <= 2002):
+#                     valid +=1
+#             if group == 'iyr:':
+#                 if (v >= 2010) and (v <= 2020):
+#                     valid +=1
+#             if group == 'eyr:':
+#                 if (v >= 2020) and (v <= 2030):
+#                     valid +=1
+#             if group == 'hgt:':
+#                 if 'cm' in v:
+#                     if (v >= 150) and (v <= 193):
+#                         valid +=1
+#                 elif 'in' in v:
+#                     if (v >= 59) and (v <= 76):
+#                         valid +=1
+#             if group == 'hcl:':
+#                 if v.startswith('#') and [0-9]{6} or [a-f]{6}:
+#
+#             if group == 'ecl:':
+#                 if v in 'amb blu brn gry grn hzl oth':
+#                     valid +=1
+#             if group == 'pid:':
+#                 if len(v) == 9:
+#                     valid += 1
         
 def find_fields(document:str) -> list:
     """
-    Find which fields are present
+    Some minor cleanup to make this easier
+    Find which fields (keys) are present
     
     :param document: string with fields
     :return: list of fields found
     """
-    cleaned = document.replace(": ", ":")
+    hashed = document.replace("# ", "#")
+    colonated = hashed.replace(": ", ":")
     m = re.compile('(\w*:.*?)')
-    groups = re.findall(m, cleaned)
+    groups = re.findall(m, colonated)
     return groups
 
 def check_fields_present(groups:list) -> int:
