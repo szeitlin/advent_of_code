@@ -7,42 +7,52 @@ def read_batch_files(inputdoc:str) -> list:
     """
     return [x.strip() for x in inputdoc.split('\n\n')]
 
-# def validate_passport_data(document:str) -> int:
-#     """
-#     Check if field values are consistent with stated requirements
-#     """
-#     groups = find_fields(document)
-#     if check_fields_present(groups) == 1:
-#         #check if they're actually valid
-#         valid = 0
-#         for group in groups:
-#             m = re.compile('(:\s?#|\w*\b)')
-#             #todo: find the value associated with the key
-#             if group == 'byr:':
-#                 if (v >= 1920) and (v <= 2002):
-#                     valid +=1
-#             if group == 'iyr:':
-#                 if (v >= 2010) and (v <= 2020):
-#                     valid +=1
-#             if group == 'eyr:':
-#                 if (v >= 2020) and (v <= 2030):
-#                     valid +=1
-#             if group == 'hgt:':
-#                 if 'cm' in v:
-#                     if (v >= 150) and (v <= 193):
-#                         valid +=1
-#                 elif 'in' in v:
-#                     if (v >= 59) and (v <= 76):
-#                         valid +=1
-#             if group == 'hcl:':
-#                 if v.startswith('#') and [0-9]{6} or [a-f]{6}:
-#
-#             if group == 'ecl:':
-#                 if v in 'amb blu brn gry grn hzl oth':
-#                     valid +=1
-#             if group == 'pid:':
-#                 if len(v) == 9:
-#                     valid += 1
+def validate_passport_data(document:str) -> int:
+    """
+    Check if field values are consistent with stated requirements
+    Split and convert to a dictionary
+    """
+    hashed = document.replace("# ", "#")
+    colonated = hashed.replace(": ", ":")
+    groups = find_fields(colonated)
+    if check_fields_present(groups) == 1: #if all fields are present
+        kv_pairs = colonated.split()
+        try:
+            kv_dict = {kv.split(':')[0]:kv.split(':')[1] for kv in kv_pairs}
+        except IndexError:
+            return 0
+        #check if they're actually valid
+        valid = 0
+        for k,v in kv_dict.items():
+            if k == 'byr:':
+                if (v >= 1920) and (v <= 2002):
+                    valid +=1
+            elif k == 'iyr:':
+                if (v >= 2010) and (v <= 2020):
+                    valid +=1
+            elif k == 'eyr:':
+                if (v >= 2020) and (v <= 2030):
+                    valid +=1
+            elif k == 'hgt:':
+                if 'cm' in v:
+                    if (v >= 150) and (v <= 193):
+                        valid +=1
+                elif 'in' in v:
+                    if (v >= 59) and (v <= 76):
+                        valid +=1
+            elif k == 'hcl:':
+                if v.startswith('#'):
+                    m = re.match('(#[0-9_a-f]{6})', v)
+                    if len(m.groups()) == 1:
+                        valid +=1
+            elif k == 'ecl:':
+                if v in 'amb blu brn gry grn hzl oth':
+                    valid +=1
+            elif k == 'pid:':
+                if len(v) == 9:
+                    valid += 1
+    else:
+        return 0
         
 def find_fields(document:str) -> list:
     """
@@ -52,10 +62,8 @@ def find_fields(document:str) -> list:
     :param document: string with fields
     :return: list of fields found
     """
-    hashed = document.replace("# ", "#")
-    colonated = hashed.replace(": ", ":")
     m = re.compile('(\w*:.*?)')
-    groups = re.findall(m, colonated)
+    groups = re.findall(m, document)
     return groups
 
 def check_fields_present(groups:list) -> int:
