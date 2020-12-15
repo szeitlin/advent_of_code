@@ -40,15 +40,21 @@ def validate_passport_data(document:str) -> int:
                 else:
                     print('eyr invalid')
             elif k == 'hgt':
-                v_list = re.split(r'\D+', v)
-                if 'cm' in v_list[1]:
-                    h = int(v_list[0])
-                    if (h >= 150) and (h <= 193):
-                        valid +=1
-                elif 'in' in v[1]:
-                    h = int(v_list[0])
-                    if (h >= 59) and (h <= 76):
-                        valid +=1
+                raw_list = re.split('(\d+)(\D+)', v)
+                v_list = list(filter(None, raw_list)) #remove empty strings
+                try:
+                    if 'cm' in v_list[1]:
+                        h = int(v_list[0])
+                        if (h >= 150) and (h <= 193):
+                            valid +=1
+                    elif 'in' in v_list[1]:
+                        h = int(v_list[0])
+                        if (h >= 59) and (h <= 76):
+                            valid +=1
+                    else:
+                        print('hgt missing units')
+                except IndexError:
+                    print('invalid hgt')
             elif k == 'hcl':
                 if v.startswith('#'):
                     m = re.match('(#[0-9_a-f]{6})', v)
@@ -70,6 +76,7 @@ def validate_passport_data(document:str) -> int:
             return 1
         else:
             print(f"Only this many {valid} are valid")
+            return 0
     else:
         return 0
         
