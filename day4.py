@@ -13,7 +13,7 @@ def validate_passport_data(document:str) -> int:
     Split and convert to a dictionary
     """
     hashed = document.replace("# ", "#")
-    colonated = hashed.replace(": ", ":")
+    colonated = re.sub(":\s*", ":", hashed)
     groups = find_fields(colonated)
     if check_fields_present(groups) == 1: #if all fields are present
         kv_pairs = colonated.split()
@@ -24,33 +24,52 @@ def validate_passport_data(document:str) -> int:
         #check if they're actually valid
         valid = 0
         for k,v in kv_dict.items():
-            if k == 'byr:':
-                if (v >= 1920) and (v <= 2002):
+            if k == 'byr':
+                if (int(v) >= 1920) and (int(v) <= 2002):
                     valid +=1
-            elif k == 'iyr:':
-                if (v >= 2010) and (v <= 2020):
+                else:
+                    print('byr invalid')
+            elif k == 'iyr':
+                if (int(v) >= 2010) and (int(v) <= 2020):
                     valid +=1
-            elif k == 'eyr:':
-                if (v >= 2020) and (v <= 2030):
+                else:
+                    print('iyr invalid')
+            elif k == 'eyr':
+                if (int(v) >= 2020) and (int(v) <= 2030):
                     valid +=1
-            elif k == 'hgt:':
-                if 'cm' in v:
-                    if (v >= 150) and (v <= 193):
+                else:
+                    print('eyr invalid')
+            elif k == 'hgt':
+                v_list = re.split(r'\D+', v)
+                if 'cm' in v_list[1]:
+                    h = int(v_list[0])
+                    if (h >= 150) and (h <= 193):
                         valid +=1
-                elif 'in' in v:
-                    if (v >= 59) and (v <= 76):
+                elif 'in' in v[1]:
+                    h = int(v_list[0])
+                    if (h >= 59) and (h <= 76):
                         valid +=1
-            elif k == 'hcl:':
+            elif k == 'hcl':
                 if v.startswith('#'):
                     m = re.match('(#[0-9_a-f]{6})', v)
                     if len(m.groups()) == 1:
                         valid +=1
-            elif k == 'ecl:':
+                    else:
+                        print("hcl invalid")
+            elif k == 'ecl':
                 if v in 'amb blu brn gry grn hzl oth':
                     valid +=1
-            elif k == 'pid:':
+                else:
+                    print('ecl invalid')
+            elif k == 'pid':
                 if len(v) == 9:
                     valid += 1
+                else:
+                    print('pid invalid')
+        if valid == 7:
+            return 1
+        else:
+            print(f"Only this many {valid} are valid")
     else:
         return 0
         
