@@ -39,14 +39,13 @@ def get_row(rows:str) -> int:
     :param rows: list of F and B cuts to make
     :return: row
     """
-    #import pdb; pdb.set_trace()
     all_rows = list(range(128))
     for char in rows[0:-1]:
         if char == 'F':
             all_rows = all_rows[0:len(all_rows)//2]
         elif char == 'B':
             all_rows = all_rows[len(all_rows)//2:]
-        print(all_rows)
+        #print(all_rows)
 
     if rows[-1] == 'F':
         return all_rows[0]
@@ -64,17 +63,24 @@ def get_column(cols:str) -> int:
     :param cols: string with only R or L cuts to make
     :return: col
     """
-    print(cols)
-    all_cols = range(7)
+    all_cols = list(range(8))
     for char in cols[0:-1]:
         print(char)
         if char == 'R':
-            all_cols = all_cols[len(all_cols)//2+1:]
+            all_cols = all_cols[len(all_cols)//2:]
         elif char == 'L':
             all_cols = all_cols[0:len(all_cols)//2]
         print(all_cols)
 
     if cols[-1] == 'R':
-        return all_cols[0] + 1 #todo: this is super hacky
+        return all_cols[1] 
     elif cols[-1] == 'L':
         return all_cols[0]
+
+if __name__ == '__main__':
+    with open('day5_input.txt', 'r') as f:
+        seats = f.readlines()
+        seat_ids = []
+        for seat in seats:
+            seat_ids.append(plane_seat(seat))
+            print(max(seat_ids))
