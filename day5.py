@@ -18,8 +18,10 @@ def plane_seat(ticket:str) -> int:
     """
     rows = ticket[0:7]
     row = get_row(rows)
+    print(f"row is {row}")
     cols = ticket[7:]
     col = get_column(cols)
+    print(f"col is {col}")
     seat_id = row * 8 + col
     return seat_id
 
@@ -37,12 +39,14 @@ def get_row(rows:str) -> int:
     :param rows: list of F and B cuts to make
     :return: row
     """
-    all_rows = range(128)
+    #import pdb; pdb.set_trace()
+    all_rows = list(range(128))
     for char in rows[0:-1]:
         if char == 'F':
-            all_rows = all_rows[0:len(all_rows)//2+1]
+            all_rows = all_rows[0:len(all_rows)//2]
         elif char == 'B':
-            all_rows = all_rows[len(all_rows)//2:-1]
+            all_rows = all_rows[len(all_rows)//2:]
+        print(all_rows)
 
     if rows[-1] == 'F':
         return all_rows[0]

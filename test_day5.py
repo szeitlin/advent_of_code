@@ -29,11 +29,23 @@ class TestWholeExamples(unittest.TestCase):
 
     def test_get_seat3(self):
         ticket = "FFFBBBFRRR"
+        row = get_row(ticket[0:7])
+        print(row)
+        assert row == 14
+        col = get_column(ticket[7:])
+        print(col)
+        assert col == 7
         seat_id = plane_seat(ticket)
         assert seat_id == 119
 
     def test_get_seat4(self):
         ticket = "BBFFBBFRLL"
+        row = get_row(ticket[0:7])
+        print(row)
+        assert row == 102
+        col = get_column(ticket[7:])
+        print(col)
+        assert col == 4
         seat_id = plane_seat(ticket)
         assert seat_id == 820
 
