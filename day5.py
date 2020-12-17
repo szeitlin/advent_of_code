@@ -1,3 +1,4 @@
+from typing import List
 
 def plane_seat(seat:str) -> int:
     """
@@ -19,13 +20,13 @@ def plane_seat(seat:str) -> int:
     ticket = seat.strip()
     rows = ticket[0:7]
     row = get_row(rows)
-    print(f"row is {row}")
+    #print(f"row is {row}")
     cols = ticket[7:]
     col = get_column(cols)
-    print(f"col is {col}")
+    #print(f"col is {col}")
     seat_id = row * 8 + col
+    print(f"seat_id is {seat_id}")
     return seat_id
-
 
 def get_row(rows:str) -> int:
     """
@@ -69,12 +70,24 @@ def get_column(cols:str) -> int:
             all_cols = all_cols[len(all_cols)//2:]
         elif char == 'L':
             all_cols = all_cols[0:len(all_cols)//2]
-        print(all_cols)
+        #print(all_cols)
 
     if cols[-1] == 'R':
         return all_cols[1]
     elif cols[-1] == 'L':
         return all_cols[0]
+
+def get_my_seat(seat_ids:List[int]):
+    """
+    Find the missing number
+    :param seat_ids: the calculated seat ids
+    :return: the one that wasn't in the list
+    """
+    seats = sorted(seat_ids)
+    shifted_index = range(1, len(seats))
+    for i,seat in zip(shifted_index,seats):
+        if seats[i] - seat > 1:
+            print(seat, seats[i])
 
 if __name__ == '__main__':
     with open('day5_input.txt', 'r') as f:
@@ -83,4 +96,5 @@ if __name__ == '__main__':
         for seat in seats:
             print(seat)
             seat_ids.append(plane_seat(seat))
-            print(max(seat_ids))
+            #print(max(seat_ids))
+        get_my_seat(seat_ids)
