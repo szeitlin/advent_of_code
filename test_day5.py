@@ -49,6 +49,14 @@ class TestWholeExamples(unittest.TestCase):
         seat_id = plane_seat(ticket)
         assert seat_id == 820
 
+    def test_get_seat5(self):
+        ticket = "FFFBBFBLLR"
+        row = get_row(ticket[0:7])
+        assert row == 13
+        col = get_column(ticket[7:])
+        assert col == 1
+        seat_id = plane_seat(ticket)
+        assert seat_id == 13*8 + 1
 
 if __name__ == '__main__':
     unittest.main()

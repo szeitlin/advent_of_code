@@ -1,5 +1,5 @@
 
-def plane_seat(ticket:str) -> int:
+def plane_seat(seat:str) -> int:
     """
     Ticket looks like this: FBFBBFFRLR
     
@@ -13,9 +13,10 @@ def plane_seat(ticket:str) -> int:
     
     seat ID: row * 8 + column
     
-    :param ticket: string
+    :param seat: string
     :return: seat ID 
     """
+    ticket = seat.strip()
     rows = ticket[0:7]
     row = get_row(rows)
     print(f"row is {row}")
@@ -45,7 +46,6 @@ def get_row(rows:str) -> int:
             all_rows = all_rows[0:len(all_rows)//2]
         elif char == 'B':
             all_rows = all_rows[len(all_rows)//2:]
-        #print(all_rows)
 
     if rows[-1] == 'F':
         return all_rows[0]
@@ -65,7 +65,6 @@ def get_column(cols:str) -> int:
     """
     all_cols = list(range(8))
     for char in cols[0:-1]:
-        print(char)
         if char == 'R':
             all_cols = all_cols[len(all_cols)//2:]
         elif char == 'L':
@@ -73,7 +72,7 @@ def get_column(cols:str) -> int:
         print(all_cols)
 
     if cols[-1] == 'R':
-        return all_cols[1] 
+        return all_cols[1]
     elif cols[-1] == 'L':
         return all_cols[0]
 
@@ -82,5 +81,6 @@ if __name__ == '__main__':
         seats = f.readlines()
         seat_ids = []
         for seat in seats:
+            print(seat)
             seat_ids.append(plane_seat(seat))
             print(max(seat_ids))
