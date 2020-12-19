@@ -45,3 +45,15 @@ def generate_groups(big_list: List[str]) -> List[str]:
     yield(group)
 
 
+if __name__ == '__main__':
+    with open('day6_input.txt', 'r') as f:
+        lines = f.readlines()
+        grouper = generate_groups(lines)
+        total = 0
+        while grouper:
+            try:
+                group = next(grouper)
+                total += count_yes(group)
+                print(total)
+            except StopIteration:
+                break
