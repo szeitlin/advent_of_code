@@ -11,26 +11,28 @@ class TestSimple(unittest.TestCase):
 class TestGenerateGroups(unittest.TestCase):
 
     def test_generate_groups(self):
-        big_list = ["abc","\n",
-        "a\n",
-        "b\n",
-        "c\n",
-        "\n",
-        "ab\n",
-        "ac\n",
-        "\n",
-        "a\n",
-        "a\n",
-        "a\n",
-        "a\n",
-        "\n",
-        "b",]
+        big_list = ["abc",
+                    "\n",
+                    "a\n",
+                    "b\n",
+                    "c\n",
+                    "\n",
+                    "ab\n",
+                    "ac\n",
+                    "\n",
+                    "a\n",
+                    "a\n",
+                    "a\n",
+                    "a\n",
+                    "\n",
+                    "b",]
         grouper = generate_groups(big_list)
         group1 = next(grouper)
-        assert group1 == ["abc"]
+        assert group1 == ["abc", '\n']
 
     def test_count_groups(self):
-        big_list = ["abc", "\n",
+        big_list = ["abc",
+                    "\n",
                     "a\n",
                     "b\n",
                     "c\n",

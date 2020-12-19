@@ -12,9 +12,10 @@ def count_yes(answers:List[str]) -> int:
     letters = []
     unique = None
     for line in answers:
-        letters.extend([x.strip() for x in line])
-        unique = set(letters)
-        print(unique)
+        if line != '\n':
+            letters.extend([x.strip() for x in line])
+            unique = set(letters)
+    print(f"unique {unique}")
 
     return len(unique)
 
@@ -25,9 +26,19 @@ def generate_groups(big_list: List[str]) -> List[str]:
     :param big_list: input file imported via readlines
     :return: a few lines
     """
-    j = 0 #last line to keep
+    group = []
+    indices = []
     for i,line in enumerate(big_list):
-        if line == '\n':
-            j += i
-            yield big_list[0:j]
+        if line != '\n':
+            group.append(line)
+            indices.append(i)
+        elif line == '\n':
+            print(f"group is {group}")
+            yield group
+            print(f"indices are: {indices}")
+            del big_list[min(indices):max(indices)]
+            indices = [max(indices)]
+            group = []
+
+
 
