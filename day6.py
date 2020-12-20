@@ -44,6 +44,23 @@ def generate_groups(big_list: List[str]) -> List[str]:
             group = []
     yield(group)
 
+def count_unanimous(answers:List[str]) -> int:
+    """
+    Same as count_yes but instead of counting uniques,
+    count the questions for which everyone in the group
+    answered
+    
+    :param answers: one person per line, one answer per letter
+    :return: total number of questions where everyone said yes
+    """
+    people = []
+    for line in answers:
+        chars = [x.strip() for x in line]
+        keep = set([x for x in chars if x != ''])
+        people.append(keep)
+    common = set.intersection(*[set(x) for x in people])
+    return len(common)
+
 
 if __name__ == '__main__':
     with open('day6_input.txt', 'r') as f:
