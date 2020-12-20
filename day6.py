@@ -70,7 +70,7 @@ if __name__ == '__main__':
         while grouper:
             try:
                 group = next(grouper)
-                total += count_yes(group)
+                total += count_unanimous(group)
                 print(total)
             except StopIteration:
                 break
