@@ -54,14 +54,14 @@ def find_holder_holders(big_dict:dict) -> List:
     """
     #first, find any bags that can contain shiny gold (using find_shiny_gold_holders)
     holders = find_target_holders(big_dict)
-
+    print(holders)
     #iterate back through the big_dict and find what bags contain those
     #again, using find_target_holders()
     all_holders = holders[:]
     for k in holders:
-        for item in k:
-        #todo: what is the stopping criteria if we did this with a while loop or recursion?
-            all_holders.extend(find_target_holders(big_dict=big_dict, target=item))
+        hits = find_target_holders(big_dict=big_dict, target=k)
+        print(hits)
+        all_holders.extend(hits)
 
     unique = set(all_holders)
     return list(unique)
