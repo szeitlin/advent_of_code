@@ -42,7 +42,7 @@ def find_target_holders(big_dict:dict, target:str='shiny gold bag') -> List:
         for item in v:
             if target in item:
                 holders.append(k)
-    #print(holders)
+                print(k,v)
     unique = set(holders)
     return list(unique)
 
@@ -56,14 +56,26 @@ def find_holder_holders(big_dict:dict) -> List:
     holders = find_target_holders(big_dict)
     print(holders)
     #iterate back through the big_dict and find what bags contain those
-    #again, using find_target_holders()
     all_holders = holders[:]
+
+    #todo: may need more iterations here?
+    #todo: stopping criteria is if you're only seeing things you've seen before on this level
     for k in holders:
+        print(k)
         hits = find_target_holders(big_dict=big_dict, target=k)
         print(hits)
-        all_holders.extend(hits)
+        if set(hits).issubset(set(all_holders)):
+            break
+        else:
+            all_holders.extend(hits)
 
     unique = set(all_holders)
+    print(unique)
     return list(unique)
 
-
+if __name__ == '__main__':
+    with open('day7_input.txt', 'r') as f:
+        rules = f.readlines()
+        big_dict = all_rules(rules)
+        holders = find_holder_holders(big_dict)
+        print(len(holders))
