@@ -28,6 +28,41 @@ Immediately before any instruction is executed a second time, what value is in t
 
 from collections import default_dict
 import re
+from typing import List
+
+class Step:
+
+    def __init__(self, i:int, stepstr:str):
+        """
+        :param i: line number
+        :param stepstr: raw instruction at that line 
+        """
+        self.index = i
+        self.action = stepstr.split(' ')[0]
+        direction = re.search('\W{1}\d+')
+        self.size = direction.group()
+
+class Stepper:
+
+    def __init__(self, steplist:List[str]):
+        """
+        :param steplist: full list of raw instructions
+        """
+        #create a list of enumerated Step objects
+        self.step_list = [(i, Step(i, instr)) for (i,instr) in enumerate(steplist)]
+
+        #initialize accumulator
+        self.acc = 0
+
+        #initialize execution counter
+        self.exec_count = default_dict(int)
+
+    def move(self, step:Step):
+        """
+        Executes each step by looking up the item by index in the step_list
+        :param step: Step object
+        """
+
 
 def track_loop():
     steps = """nop +0\n
