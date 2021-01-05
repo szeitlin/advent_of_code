@@ -26,7 +26,7 @@ Immediately before any instruction is executed a second time, what value is in t
 
 #need three things: 1. what's the accumulator value, 2. track execution of each line 3. index the lines
 
-from collections import default_dict
+from collections import defaultdict
 import re
 from typing import List
 
@@ -40,7 +40,7 @@ class Step:
         self.index = i
         self.action = stepstr.split(' ')[0]
         direction = re.search('\W{1}\d+')
-        self.size = direction.group()
+        self.size = int(direction.group())
 
 class Stepper:
 
@@ -49,20 +49,46 @@ class Stepper:
         :param steplist: full list of raw instructions
         """
         #create a list of enumerated Step objects
-        self.step_list = [(i, Step(i, instr)) for (i,instr) in enumerate(steplist)]
+        self.step_dict = {i:Step(i, instr) for (i,instr) in enumerate(steplist)}
 
         #initialize accumulator
         self.acc = 0
 
         #initialize execution counter
-        self.exec_count = default_dict(int)
+        self.exec_count = defaultdict(int) #todo: what is the key here? the index?
 
-    def move(self, step:Step):
+    def move(self, i:int):
         """
-        Executes each step by looking up the item by index in the step_list
+        Executes each step by looking up the item by index in the step_dict
+        Increments the exec_count as it goes
+        :param i: index of the current step
+        """
+        #todo: figure out what the while loop criteria should be
+        while 2 not in self.exec_count.values():
+
+            #stopping criteria
+            if self.exec_count[i] == 1:
+                break
+            else:
+                self.exec_count[i] += 1
+                self.do_step(self.step_dict[i])
+        return self.acc
+
+    def do_step(self, step:Step):
+        """
+        Execute the current step
         :param step: Step object
         """
-
+        if step.action == 'acc':
+            self.acc += step.size
+            gohere = step.index + 1
+            return self.move(gohere)
+        elif step.action == 'nop':
+            gohere = step.index + 1
+            return self.move(gohere)
+        elif step.action == 'jump':
+            gohere = step.index + step.size
+            return self.move(gohere)
 
 def track_loop():
     steps = """nop +0\n
