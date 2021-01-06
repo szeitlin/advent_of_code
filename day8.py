@@ -57,15 +57,13 @@ class Stepper:
         #initialize execution counter
         self.exec_count = defaultdict(int) #todo: what is the key here? the index?
 
-    def move(self, i:int):
+    def move(self, i:int=0):
         """
         Executes each step by looking up the item by index in the step_dict
         Increments the exec_count as it goes
-        :param i: index of the current step
+        :param i: index of the current step, starts at 0
         """
-        #todo: figure out what the while loop criteria should be
         while 2 not in self.exec_count.values():
-
             #stopping criteria
             if self.exec_count[i] == 1:
                 break

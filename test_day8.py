@@ -33,7 +33,8 @@ class TestStepper(unittest.TestCase):
         cls.ex = Stepper(step_list)
 
     def test_move(self):
-        pass
+        acc = self.ex.move()
+        assert acc == 5
 
     def test_do_acc(self):
         accer = Step(6, 'acc -99')
