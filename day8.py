@@ -88,4 +88,10 @@ class Stepper:
             gohere += step.size
         return gohere
 
+if __name__ == '__main__':
+    with open('day8_input.txt', 'r') as f:
+        steplist = f.readlines()
+        stepthis = Stepper(steplist)
+        acc = stepthis.move()
+        print(acc)
 
