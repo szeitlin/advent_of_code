@@ -39,7 +39,7 @@ class Step:
         """
         self.index = i
         self.action = stepstr.split(' ')[0]
-        direction = re.search('\W{1}\d+')
+        direction = re.search('\W{1}\d+', stepstr)
         self.size = int(direction.group())
 
 class Stepper:
