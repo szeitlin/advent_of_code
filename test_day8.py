@@ -18,17 +18,18 @@ class TestStep(unittest.TestCase):
 class TestStepper(unittest.TestCase):
 
     @classmethod
-    def setUpClass(cls):
-        steps = """nop +0\n
-        acc +1\n
-        jmp +4\n
-        acc +3\n
-        jmp -3\n
-        acc -99\n
-        acc +1\n
-        jmp -4\n
+    def setUp(cls):
+        steps = """nop +0
+        acc +1
+        jmp +4
+        acc +3
+        jmp -3
+        acc -99
+        acc +1
+        jmp -4
         acc +6"""
-        step_list = steps.split('\n')
+        raw_step_list = steps.split('\n')
+        step_list = [x.lstrip() for x in raw_step_list]
         cls.ex = Stepper(step_list)
 
     def test_move(self):
@@ -50,7 +51,7 @@ class TestStepper(unittest.TestCase):
         jmper = Step(3, 'jmp +4')
         gohere = self.ex.do_step(jmper)
         assert self.ex.acc == 0
-        assert gohere == 4
+        assert gohere == 7
 
 if __name__ == '__main__':
     unittest.main()
