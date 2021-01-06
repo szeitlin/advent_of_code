@@ -71,52 +71,23 @@ class Stepper:
                 break
             else:
                 self.exec_count[i] += 1
-                self.do_step(self.step_dict[i])
+                gohere = self.do_step(self.step_dict[i])
+                self.move(gohere)
         return self.acc
 
-    def do_step(self, step:Step):
+    def do_step(self, step:Step) -> int:
         """
         Execute the current step
         :param step: Step object
         """
+        gohere = step.index
         if step.action == 'acc':
             self.acc += step.size
-            gohere = step.index + 1
-            return self.move(gohere)
+            gohere += 1
         elif step.action == 'nop':
-            gohere = step.index + 1
-            return self.move(gohere)
-        elif step.action == 'jump':
-            gohere = step.index + step.size
-            return self.move(gohere)
+            gohere += 1
+        elif step.action == 'jmp':
+            gohere += step.size
+        return gohere
 
-def track_loop():
-    steps = """nop +0\n
-    acc +1\n
-    jmp +4\n
-    acc +3\n
-    jmp -3\n
-    acc -99\n
-    acc +1\n
-    jmp -4\n
-    acc +6"""
-    step_list = steps.split('\n')
-    acc = 0
-    exec_count = default_dict(int)
-    for i, step in enumerate(step_list):
-        print(step)
-        if exec_count[i] == 1:
-            return acc
-        else:
-            exec_count[i] += 1
-            direction = re.search('\W{1}\d+')
-            size = direction.group()
-
-            if 'acc' in step:
-                acc += int(size)
-            elif 'jmp' in step:
-                i += int(size)
-                continue
-            elif 'nop' in step:
-                continue
 
