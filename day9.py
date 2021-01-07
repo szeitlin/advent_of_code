@@ -16,10 +16,13 @@ def sum_previous(xmaslist: List[int], n:int=25,) -> int:
 
     #want everything to be indexed
     for i, num in enumerate(xmaslist):
+        print(i, num)
         if i in range(0,n):
             continue
         else:
+            #todo: may want to keep track of pairs we've seen since order doesn't matter?
             window = xmaslist[i-n:i]
+            print(window)
             for j in window:
                 if num - j < 0:
                     continue
@@ -27,8 +30,7 @@ def sum_previous(xmaslist: List[int], n:int=25,) -> int:
                     half = j
                     if (num - half) in window:
                         print(f" found: {num} = {half}, {(num-half)}")
-                        continue
-                    else:
-                        print(f" found one: {num}")
                         break
-        return num
+            else:
+                print(f" no match found: {num}")
+                return num
