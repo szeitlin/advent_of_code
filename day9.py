@@ -34,3 +34,10 @@ def sum_previous(xmaslist: List[int], n:int=25,) -> int:
             else:
                 print(f" no match found: {num}")
                 return num
+
+if __name__ == '__main__':
+    with open('day9_input.txt', 'r') as f:
+        raw = f.readlines()
+        xmaslist = [int(x) for x in raw]
+        result = sum_previous(xmaslist)
+        print(result)
