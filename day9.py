@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 #preamble of 25 numbers
 #each subsequent number should be the sum of any two of the 25 previous numbers
@@ -22,7 +22,6 @@ def sum_previous(xmaslist: List[int], n:int=25,) -> int:
         else:
             #todo: may want to keep track of pairs we've seen since order doesn't matter?
             window = xmaslist[i-n:i]
-            print(window)
             for j in window:
                 if num - j < 0:
                     continue
@@ -34,6 +33,15 @@ def sum_previous(xmaslist: List[int], n:int=25,) -> int:
             else:
                 print(f" no match found: {num}")
                 return num
+
+def sum_contiguous(xmaslist: List[int], num:int) -> Tuple[int,int]:
+    """
+    :param xmaslist: list of numbers as input
+    :param num: the target number, which we found in sum_previous 
+    :return: smallest and largest number in a contiguous range that sums to num
+    """
+    #have to keep track of which numbers contribute to the final sum
+    
 
 if __name__ == '__main__':
     with open('day9_input.txt', 'r') as f:
