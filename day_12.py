@@ -1,59 +1,102 @@
 import operator
 import re
 
-def move_ship(start:list, instr:str) -> list:
-    """
-    Assuming a coordinate system of (-inf, inf) on the x and (-inf, inf) on the y
+
+class Ship:
+
+    def __init__(self):
+        """
+        :param facing: direction the ship is facing right now
+        """
+        self.start = [0,0]
+        self.facing = 'E'
+
+    def move_ship(self, instr:str) -> list:
+        """
+        Assuming a coordinate system of (-inf, inf) on the x and (-inf, inf) on the y
+        
+        :param instr: looks like NSEW, LR, or F (forward), plus a number
     
-    :param start: wherever the ship is now, before executing a step
-    :param instr: looks like NSEW, LR, or F (forward), plus a number
+        :return: new coordinates
+        """
+        #Let's assume East is + and West is -
+        #Let's also assume North is + and South is -
 
-    
-    :return: new coordinates
-    """
-    #Let's assume East is + and West is -
-    #Let's also assume North is + and South is -
+        #initialize output coordinate
+        result = self.start
 
-    step_dir = re.match('^(\D)', instr).group()
-    step_size = int(re.search('(\d+)', instr).group())
+        step_dir = re.match('^(\D)', instr).group()
+        step_size = int(re.search('(\d+)', instr).group())
 
-    direction_map = {'N': operator.add(start[1], step_size),
-                     'S': operator.sub(start[1], step_size),
-                      'E': operator.add(start[0], step_size),
-                        'W': operator.sub(start[0], step_size)}
+        direction_map = {'N': operator.add(self.start[1], step_size),
+                         'S': operator.sub(self.start[1], step_size),
+                          'E': operator.add(self.start[0], step_size),
+                            'W': operator.sub(self.start[0], step_size)}
 
-    step = direction_map[step_dir]
-    print(step)
+        #look up how far to go according to the direction
+        if step_dir in 'NSEW':
+            step = direction_map[step_dir]
+        elif step_dir == 'F':
+            step_dir = self.facing
+            step = direction_map[step_dir]
+        elif step_dir in 'LR':
+            step_dir = self.rotate(step_size)
+            self.facing = step_dir
 
-    result = start
+        if step_dir in 'NS':
+            print('North or South')
+            result = [self.start[0], step]
+            print(result)
 
-    if step_dir in 'NS':
-        print('North or South')
-        result = [start[0], step]
-        print(result)
+        elif step_dir in 'EW':
+            print('East or West')
+            result = [step, self.start[1]]
+            print(result)
 
-    elif step_dir in 'EW':
-        print('East or West')
-        result = [step, start[1]]
-        print(result)
+        return result
 
-    return result
+    def rotate(self, step_size=int) -> list:
+        """
+        Ship starts out facing east (we'll call that 'E')
+        
+        #Only LR (left and right) can change the direction the ship is facing
+        """
+        if self.facing == 'L':
+            #Left is counter-clockwise
+            directions = 'NWSE'
+        elif self.facing == 'R':
+            #Right is clockwise
+            directions = 'SWNE'
+        for i in range(step_size):
+            #iterate through the list of directions in a loop
+            #I believe there's a way to do this with itertools
 
-#todo: write functions for handling facing, left and right rotations
-#Only LR (left and right) can change the direction the ship is facing
+    def manhattan_distance(self, end:list) -> int:
+        """
+        sum of the absolute values of east/west and north/south position
+        
+        abs(x2-x1) + abs(y2-y1)
+        
+        :param end: final location, after executing all steps in the sequence
+        :return: distance
+        """
+        y = operator.abs(end[1] - self.start[1])
+        x = operator.abs(end[0] - self.start[0])
+        return x + y
 
+    def execute_movements(self, instr_list:list) -> list:
+        """
+        Take a list of instructions and move the ship accordingly
+        :param instr_list: list of str
+        :return: ending coordinate
+        """
+        #todo: write this method
+        pass
 
-def manhattan_distance(start:list, end:list) -> int:
-    """
-    sum of the absolute values of east/west and north/south position
-    
-    abs(x2-x1) + abs(y2-y1)
-    
-    :param start: starting location
-    :param end: final location, after executing all steps in the sequence
-    :return: distance
-    """
-    y = operator.abs(end[1] - start[1])
-    x = operator.abs(end[0] - start[0])
-    return x + y
+if __name__ == '__main__':
+    #todo: read in the list of instructions
+    ship = Ship()
+    end = ship.execute_movements(instr_list)
+    distance = ship.manhattan_distance(end)
+
 

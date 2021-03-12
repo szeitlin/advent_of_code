@@ -24,7 +24,7 @@ class TestMoveShip(unittest.TestCase):
         instr='W11'
         moved = move_ship(start, instr)
         assert moved == [-11, 0]
-        
+
 class TestManhattanDistance(unittest.TestCase):
 
     def test_manhattan_distance(self):
