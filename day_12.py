@@ -1,3 +1,4 @@
+from itertools import cycle
 import operator
 import re
 
@@ -40,7 +41,7 @@ class Ship:
             step_dir = self.facing
             step = direction_map[step_dir]
         elif step_dir in 'LR':
-            step_dir = self.rotate(step_size)
+            step_dir = self.rotate(step_dir, step_size)
             self.facing = step_dir
 
         if step_dir in 'NS':
@@ -55,21 +56,37 @@ class Ship:
 
         return result
 
-    def rotate(self, step_size=int) -> list:
+    def rotate(self, step_dir:str, step_size:int) -> list:
         """
         Ship starts out facing east (we'll call that 'E')
         
-        #Only LR (left and right) can change the direction the ship is facing
+        :param step_dir: has to be L or R
+        :param step_size: int
+        
+        Only LR (left and right) can change the direction the ship is facing
         """
-        if self.facing == 'L':
+        
+        if self.facing != 'E':
+        # todo: have to make this enter the list at the right place if not starting facing E
+
+        if step_dir == 'L':
             #Left is counter-clockwise
             directions = 'NWSE'
-        elif self.facing == 'R':
+        elif step_dir == 'R':
             #Right is clockwise
             directions = 'SWNE'
+        else:
+            raise ValueError('Can only rotate Left or Right')
+        print(directions)
+
+        # iterate through the list of directions in a loop
+        go = cycle(directions)
+
         for i in range(step_size):
-            #iterate through the list of directions in a loop
-            #I believe there's a way to do this with itertools
+            facing = next(go)
+
+        return facing
+
 
     def manhattan_distance(self, end:list) -> int:
         """
