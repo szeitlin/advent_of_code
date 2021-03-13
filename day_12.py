@@ -65,25 +65,8 @@ class Ship:
         
         Only LR (left and right) can change the direction the ship is facing
         """
-        
-        if self.facing != 'E':
-        # todo: have to make this enter the list at the right place if not starting facing E
+        #todo: I read these instructions completely wrong
 
-        if step_dir == 'L':
-            #Left is counter-clockwise
-            directions = 'NWSE'
-        elif step_dir == 'R':
-            #Right is clockwise
-            directions = 'SWNE'
-        else:
-            raise ValueError('Can only rotate Left or Right')
-        print(directions)
-
-        # iterate through the list of directions in a loop
-        go = cycle(directions)
-
-        for i in range(step_size):
-            facing = next(go)
 
         return facing
 
@@ -107,8 +90,19 @@ class Ship:
         :param instr_list: list of str
         :return: ending coordinate
         """
-        #todo: write this method
-        pass
+        #save the original starting point, because we're going to overwrite it
+        start = self.start
+        for instr in instr_list:
+            result = self.move_ship(instr)
+            self.start = result
+        print(self.start)
+
+        #todo: this naming is bad, I should fix it
+        end = self.start #final result
+        self.start = start
+        dist = self.manhattan_distance(end)
+        return dist
+
 
 if __name__ == '__main__':
     #todo: read in the list of instructions

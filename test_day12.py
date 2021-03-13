@@ -40,13 +40,22 @@ class TestRotate(unittest.TestCase):
         facing = self.ship.rotate(step_dir, step_size)
         assert facing == 'N'
 
-
 class TestManhattanDistance(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.ship = Ship()
+
     def test_manhattan_distance(self):
-        self.fail()
+        end = [17, 8]
+        dist = self.ship.manhattan_distance(end)
+        assert dist == 25
 
+class TestExecuteMovements(unittest.TestCase):
 
+    def test_execute_movements(self):
+        instr_list = ['F10', 'N3', 'F7', 'R90', 'F11']
+        
 if __name__ == '__main__':
     unittest.main()
 
