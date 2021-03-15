@@ -76,13 +76,26 @@ class Ship:
         """
         #input format is direction + degrees, e.g. R90 from East would be South
         rot_steps = step_size//90
-        direction_map = {'L' :cycle('NWSE'), 'R': cycle('SWNE')}
-        steps = direction_map[step_dir]
+        right_map = {'E':0, 'S':1, 'W':2, 'N':3}
+        left_map = {'E':0, 'N':1, 'W':2, 'S':3}
+        rot_map = {'L': operator.abs(operator.sub(left_map[self.current_facing], rot_steps%4)),
+                   'R': operator.add(right_map[self.current_facing], rot_steps%4)}
+        reverse_left_map = {y:x for (x,y) in left_map.items()}
+        reverse_right_map = {y:x for (x,y) in right_map.items()}
 
-        for i in range(rot_steps):
-            facing = next(steps)
+        # going from self.current_facing
+        facing = rot_map[step_dir]
+        print(facing)
 
-        return facing
+        if step_dir == 'L':
+            new_facing = reverse_left_map[facing]
+        elif step_dir == 'R':
+            new_facing = reverse_right_map[facing]
+        else:
+            raise ValueError(f"Step_dir is not L or R, it's {step_dir}!")
+
+        print(new_facing)
+        return new_facing
 
 
     def manhattan_distance(self, end:list) -> int:
@@ -104,8 +117,6 @@ class Ship:
         :param instr_list: list of str
         :return: ending coordinate
         """
-        #save the original starting point, because we're going to overwrite it
-
         for instr in instr_list:
             result = self.move_ship(instr)
             self.current = result
@@ -118,9 +129,9 @@ class Ship:
 
 
 if __name__ == '__main__':
-    #todo: read in the list of instructions
+    with open('day12_input.txt', 'r') as f:
+        instr_list = f.readlines()
     ship = Ship()
-    end = ship.execute_movements(instr_list)
-    distance = ship.manhattan_distance(end)
-
+    distance = ship.execute_movements(instr_list)
+    print(distance)
 
