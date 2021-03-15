@@ -36,7 +36,7 @@ class TestRotate(unittest.TestCase):
 
     def test_rotate_left(self):
         step_dir = 'L'
-        step_size = 5
+        step_size = 90
         facing = self.ship.rotate(step_dir, step_size)
         assert facing == 'N'
 
@@ -53,9 +53,15 @@ class TestManhattanDistance(unittest.TestCase):
 
 class TestExecuteMovements(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.ship = Ship()
+
     def test_execute_movements(self):
         instr_list = ['F10', 'N3', 'F7', 'R90', 'F11']
-        
+        dist = self.ship.execute_movements(instr_list)
+        assert dist == 25
+
 if __name__ == '__main__':
     unittest.main()
 

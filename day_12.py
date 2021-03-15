@@ -10,7 +10,9 @@ class Ship:
         :param facing: direction the ship is facing right now
         """
         self.start = [0,0]
-        self.facing = 'E'
+        self.current = [0,0]
+        self.start_facing = 'E'
+        self.current_facing = self.start_facing
 
     def move_ship(self, instr:str) -> list:
         """
@@ -24,34 +26,41 @@ class Ship:
         #Let's also assume North is + and South is -
 
         #initialize output coordinate
-        result = self.start
+        result = self.current
+
+        #initialize step. Assume going nowhere unless we say otherwise
+        step = 0
 
         step_dir = re.match('^(\D)', instr).group()
         step_size = int(re.search('(\d+)', instr).group())
 
-        direction_map = {'N': operator.add(self.start[1], step_size),
-                         'S': operator.sub(self.start[1], step_size),
-                          'E': operator.add(self.start[0], step_size),
-                            'W': operator.sub(self.start[0], step_size)}
+        direction_map = {'N': operator.add(self.current[1], step_size),
+                         'S': operator.sub(self.current[1], step_size),
+                          'E': operator.add(self.current[0], step_size),
+                            'W': operator.sub(self.current[0], step_size)}
 
         #look up how far to go according to the direction
         if step_dir in 'NSEW':
             step = direction_map[step_dir]
+            print(step)
         elif step_dir == 'F':
-            step_dir = self.facing
+            step_dir = self.current_facing
             step = direction_map[step_dir]
+            print(f'facing step: {step}')
         elif step_dir in 'LR':
             step_dir = self.rotate(step_dir, step_size)
-            self.facing = step_dir
+            self.current_facing = step_dir
+            step = self.current[1] #not going anywhere, have to keep this
+            print(f'rotation: {step_dir}')
+
+        print(step_dir)
 
         if step_dir in 'NS':
-            print('North or South')
-            result = [self.start[0], step]
+            result = [self.current[0], step]
             print(result)
 
         elif step_dir in 'EW':
-            print('East or West')
-            result = [step, self.start[1]]
+            result = [step, self.current[1]]
             print(result)
 
         return result
@@ -65,8 +74,13 @@ class Ship:
         
         Only LR (left and right) can change the direction the ship is facing
         """
-        #todo: I read these instructions completely wrong
+        #input format is direction + degrees, e.g. R90 from East would be South
+        rot_steps = step_size//90
+        direction_map = {'L' :cycle('NWSE'), 'R': cycle('SWNE')}
+        steps = direction_map[step_dir]
 
+        for i in range(rot_steps):
+            facing = next(steps)
 
         return facing
 
@@ -91,16 +105,15 @@ class Ship:
         :return: ending coordinate
         """
         #save the original starting point, because we're going to overwrite it
-        start = self.start
+
         for instr in instr_list:
             result = self.move_ship(instr)
-            self.start = result
-        print(self.start)
+            self.current = result
+        print(self.current)
 
-        #todo: this naming is bad, I should fix it
-        end = self.start #final result
-        self.start = start
+        end = self.current #final result
         dist = self.manhattan_distance(end)
+        print(dist)
         return dist
 
 
