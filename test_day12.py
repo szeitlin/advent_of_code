@@ -40,6 +40,12 @@ class TestRotate(unittest.TestCase):
         facing = self.ship.rotate(step_dir, step_size)
         assert facing == 'N'
 
+    def test_rotate_right(self):
+        step_dir = 'R'
+        step_size = 90
+        facing = self.ship.rotate(step_dir, step_size)
+        assert facing == 'S'
+
 class TestManhattanDistance(unittest.TestCase):
 
     @classmethod
